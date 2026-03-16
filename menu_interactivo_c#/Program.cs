@@ -1,9 +1,8 @@
-﻿namespace menu_ineractivo_c_;
+﻿using System;
 
 class Program
 {
-    static void Main(string[] args)
+    static void Main()
     {
-        Console.WriteLine("hello, world!");
+        ShowMainMenu();
     }
-}
