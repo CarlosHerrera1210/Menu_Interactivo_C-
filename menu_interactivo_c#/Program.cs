@@ -468,4 +468,17 @@ class Program
             Console.WriteLine("Simulación: datos reiniciados.");
         }
     }
+
+     static bool ConfirmExitAndSave()
+    {
+        Console.WriteLine("¿Guardar antes de salir? (S/N)");
+        string op = Console.ReadLine();
+
+        if (op.ToUpper() == "S")
+        {
+            SaveData();
+        }
+
+        return true;
+    }
 }
