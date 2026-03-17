@@ -383,4 +383,48 @@ class Program
     {
         Console.WriteLine("Simulación: eliminar préstamo.");
     }
+
+    static void ShowSearchReportsMenu()
+    {
+        bool back = false;
+
+        while (!back)
+        {
+            Console.Clear();
+            Console.WriteLine("=== BÚSQUEDAS Y REPORTES ===");
+            Console.WriteLine("1. Buscar libro");
+            Console.WriteLine("2. Buscar usuario");
+            Console.WriteLine("3. Reportes");
+            Console.WriteLine("0. Volver");
+
+            string op = Console.ReadLine();
+
+            switch (op)
+            {
+                case "1": SearchBook(); break;
+                case "2": SearchUser(); break;
+                case "3": ReportsMenu(); break;
+                case "0": back = true; break;
+                default: Console.WriteLine("Opción inválida"); break;
+            }
+
+            Console.ReadKey();
+        }
+    }
+
+    static void SearchBook()
+    {
+        Console.WriteLine("Simulación: buscar libro por título/autor/id/categoría.");
+    }
+
+    static void SearchUser()
+    {
+        Console.WriteLine("Simulación: buscar usuario por nombre o ID.");
+    }
+
+    static void ReportsMenu()
+    {
+        Console.WriteLine("Simulación: mostrar reportes.");
+        Console.WriteLine("Reportes disponibles: por usuario, por libro, vencidos, resumen.");
+    }
 }
