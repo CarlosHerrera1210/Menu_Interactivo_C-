@@ -192,4 +192,99 @@ class Program
     {
         Console.WriteLine("Simulación: eliminar libro (validar que no esté prestado).");
     }
+
+    static void ShowUsersMenu()
+    {
+        bool back = false;
+
+        while (!back)
+        {
+            Console.Clear();
+            Console.WriteLine("=== GESTIÓN DE USUARIOS ===");
+            Console.WriteLine("1. Registrar usuario");
+            Console.WriteLine("2. Listar usuarios");
+            Console.WriteLine("3. Ver detalle");
+            Console.WriteLine("4. Actualizar usuario");
+            Console.WriteLine("5. Eliminar usuario");
+            Console.WriteLine("0. Volver");
+
+            string op = Console.ReadLine();
+
+            switch (op)
+            {
+                case "1": RegisterUser(); break;
+                case "2": ListUsers(); break;
+                case "3": ViewUserDetail(); break;
+                case "4": UpdateUserMenu(); break;
+                case "5": DeleteUser(); break;
+                case "0": back = true; break;
+                default: Console.WriteLine("Opción inválida"); break;
+            }
+
+            Console.ReadKey();
+        }
+    }
+
+    static void RegisterUser()
+    {
+        Console.WriteLine("Simulación: registrar usuario.");
+    }
+
+    static void ListUsers()
+    {
+        Console.WriteLine("Simulación: listar usuarios.");
+    }
+
+    static void ViewUserDetail()
+    {
+        Console.WriteLine("Simulación: ver detalle del usuario.");
+    }
+
+    static void UpdateUserMenu()
+    {
+        bool back = false;
+
+        while (!back)
+        {
+            Console.Clear();
+            Console.WriteLine("=== ACTUALIZAR USUARIO ===");
+            Console.WriteLine("1. Editar nombre");
+            Console.WriteLine("2. Editar contacto");
+            Console.WriteLine("3. Activar / desactivar");
+            Console.WriteLine("0. Volver");
+
+            string op = Console.ReadLine();
+
+            switch (op)
+            {
+                case "1": EditUserName(); break;
+                case "2": EditUserContact(); break;
+                case "3": ToggleUserActiveStatus(); break;
+                case "0": back = true; break;
+                default: Console.WriteLine("Opción inválida"); break;
+            }
+
+            Console.ReadKey();
+        }
+    }
+
+    static void EditUserName()
+    {
+        Console.WriteLine("Simulación: editar nombre del usuario.");
+    }
+
+    static void EditUserContact()
+    {
+        Console.WriteLine("Simulación: editar contacto.");
+    }
+
+    static void ToggleUserActiveStatus()
+    {
+        Console.WriteLine("Simulación: activar o desactivar usuario.");
+    }
+
+    static void DeleteUser()
+    {
+        Console.WriteLine("Simulación: eliminar usuario (validar préstamos activos).");
+    }
 }
