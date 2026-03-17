@@ -427,4 +427,45 @@ class Program
         Console.WriteLine("Simulación: mostrar reportes.");
         Console.WriteLine("Reportes disponibles: por usuario, por libro, vencidos, resumen.");
     }
+
+    static void ShowPersistenceMenu()
+    {
+        Console.Clear();
+        Console.WriteLine("=== GUARDAR / CARGAR DATOS ===");
+        Console.WriteLine("1. Guardar datos");
+        Console.WriteLine("2. Cargar datos");
+        Console.WriteLine("3. Reiniciar datos");
+
+        string op = Console.ReadLine();
+
+        switch (op)
+        {
+            case "1": SaveData(); break;
+            case "2": LoadData(); break;
+            case "3": ResetData(); break;
+        }
+
+        Console.ReadKey();
+    }
+
+    static void SaveData()
+    {
+        Console.WriteLine("Simulación: datos guardados.");
+    }
+
+    static void LoadData()
+    {
+        Console.WriteLine("Simulación: datos cargados.");
+    }
+
+    static void ResetData()
+    {
+        Console.WriteLine("¿Seguro que desea reiniciar datos? (S/N)");
+        string op = Console.ReadLine();
+
+        if (op.ToUpper() == "S")
+        {
+            Console.WriteLine("Simulación: datos reiniciados.");
+        }
+    }
 }
