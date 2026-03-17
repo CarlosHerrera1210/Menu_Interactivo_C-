@@ -58,4 +58,138 @@ class Program
             }
         }
     }
+    
+
+    static void ShowBooksMenu()
+    {
+        bool back = false;
+
+        while (!back)
+        {
+            Console.Clear();
+            Console.WriteLine("=== GESTIÓN DE LIBROS ===");
+            Console.WriteLine("1. Registrar libro");
+            Console.WriteLine("2. Listar libros");
+            Console.WriteLine("3. Ver detalle");
+            Console.WriteLine("4. Actualizar libro");
+            Console.WriteLine("5. Eliminar libro");
+            Console.WriteLine("0. Volver");
+
+            string op = Console.ReadLine();
+
+            switch (op)
+            {
+                case "1": RegisterBook(); break;
+                case "2": ListBooksMenu(); break;
+                case "3": ViewBookDetail(); break;
+                case "4": UpdateBookMenu(); break;
+                case "5": DeleteBook(); break;
+                case "0": back = true; break;
+                default: Console.WriteLine("Opción inválida"); break;
+            }
+
+            Console.ReadKey();
+        }
+    }
+
+    static void RegisterBook()
+    {
+        Console.WriteLine("Simulación: registrar libro.");
+    }
+
+    static void ListBooksMenu()
+    {
+        bool back = false;
+
+        while (!back)
+        {
+            Console.Clear();
+            Console.WriteLine("=== LISTAR LIBROS ===");
+            Console.WriteLine("1. Todos");
+            Console.WriteLine("2. Disponibles");
+            Console.WriteLine("3. Prestados");
+            Console.WriteLine("0. Volver");
+
+            string op = Console.ReadLine();
+
+            switch (op)
+            {
+                case "1": ListBooksAll(); break;
+                case "2": ListBooksAvailable(); break;
+                case "3": ListBooksBorrowed(); break;
+                case "0": back = true; break;
+                default: Console.WriteLine("Opción inválida"); break;
+            }
+
+            Console.ReadKey();
+        }
+    }
+
+    static void ListBooksAll()
+    {
+        Console.WriteLine("Simulación: listar todos los libros.");
+    }
+
+    static void ListBooksAvailable()
+    {
+        Console.WriteLine("Simulación: listar libros disponibles.");
+    }
+
+    static void ListBooksBorrowed()
+    {
+        Console.WriteLine("Simulación: listar libros prestados.");
+    }
+
+    static void ViewBookDetail()
+    {
+        Console.WriteLine("Simulación: ver detalle de libro por ID/ISBN.");
+    }
+
+    static void UpdateBookMenu()
+    {
+        bool back = false;
+
+        while (!back)
+        {
+            Console.Clear();
+            Console.WriteLine("=== ACTUALIZAR LIBRO ===");
+            Console.WriteLine("1. Editar título");
+            Console.WriteLine("2. Editar autor");
+            Console.WriteLine("3. Editar año / categoría");
+            Console.WriteLine("0. Volver");
+
+            string op = Console.ReadLine();
+
+            switch (op)
+            {
+                case "1": EditBookTitle(); break;
+                case "2": EditBookAuthor(); break;
+                case "3": EditBookYearCategory(); break;
+                case "0": back = true; break;
+                default: Console.WriteLine("Opción inválida"); break;
+            }
+
+            Console.ReadKey();
+        }
+    }
+
+    static void EditBookTitle()
+    {
+        Console.WriteLine("Simulación: editar título del libro.");
+    }
+
+    static void EditBookAuthor()
+    {
+        Console.WriteLine("Simulación: editar autor del libro.");
+    }
+
+    static void EditBookYearCategory()
+    {
+        Console.WriteLine("Simulación: editar año o categoría.");
+    }
+
+    static void DeleteBook()
+    {
+        Console.WriteLine("Simulación: eliminar libro (validar que no esté prestado).");
+    }
 }
