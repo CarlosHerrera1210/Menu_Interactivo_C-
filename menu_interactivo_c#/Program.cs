@@ -16,7 +16,7 @@ class Program
 
         while (!exit)
         {
-            Console.Clear();
+            SafeClear();
             Console.WriteLine("===== SISTEMA DE BIBLIOTECA =====");
             Console.WriteLine("1. Libros");
             Console.WriteLine("2. Usuarios");
@@ -25,7 +25,7 @@ class Program
             Console.WriteLine("5. Guardar / Cargar datos");
             Console.WriteLine("6. Salir");
 
-            string op = Console.ReadLine();
+            string op = ReadOption();
 
             switch (op)
             {
@@ -55,7 +55,7 @@ class Program
 
                 default:
                     Console.WriteLine("Opción inválida");
-                    Console.ReadKey();
+                    Pause();
                     break;
             }
         }
@@ -68,7 +68,7 @@ class Program
 
         while (!back)
         {
-            Console.Clear();
+            SafeClear();
             Console.WriteLine("=== GESTIÓN DE LIBROS ===");
             Console.WriteLine("1. Registrar libro");
             Console.WriteLine("2. Listar libros");
@@ -77,7 +77,7 @@ class Program
             Console.WriteLine("5. Eliminar libro");
             Console.WriteLine("0. Volver");
 
-            string op = Console.ReadLine();
+            string op = ReadOption();
 
             switch (op)
             {
@@ -90,7 +90,10 @@ class Program
                 default: Console.WriteLine("Opción inválida"); break;
             }
 
-            Console.ReadKey();
+            if (!back)
+            {
+                Pause();
+            }
         }
     }
 
@@ -109,14 +112,14 @@ class Program
 
         while (!back)
         {
-            Console.Clear();
+            SafeClear();
             Console.WriteLine("=== LISTAR LIBROS ===");
             Console.WriteLine("1. Todos");
             Console.WriteLine("2. Disponibles");
             Console.WriteLine("3. Prestados");
             Console.WriteLine("0. Volver");
 
-            string op = Console.ReadLine();
+            string op = ReadOption();
 
             switch (op)
             {
@@ -127,7 +130,10 @@ class Program
                 default: Console.WriteLine("Opción inválida"); break;
             }
 
-            Console.ReadKey();
+            if (!back)
+            {
+                Pause();
+            }
         }
     }
 
@@ -182,14 +188,14 @@ class Program
 
         while (!back)
         {
-            Console.Clear();
+            SafeClear();
             Console.WriteLine("=== ACTUALIZAR LIBRO ===");
             Console.WriteLine("1. Editar título");
             Console.WriteLine("2. Editar autor");
             Console.WriteLine("3. Editar año / categoría");
             Console.WriteLine("0. Volver");
 
-            string op = Console.ReadLine();
+            string op = ReadOption();
 
             switch (op)
             {
@@ -200,7 +206,10 @@ class Program
                 default: Console.WriteLine("Opción inválida"); break;
             }
 
-            Console.ReadKey();
+            if (!back)
+            {
+                Pause();
+            }
         }
     }
 
@@ -230,7 +239,7 @@ class Program
 
         while (!back)
         {
-            Console.Clear();
+            SafeClear();
             Console.WriteLine("=== GESTIÓN DE USUARIOS ===");
             Console.WriteLine("1. Registrar usuario");
             Console.WriteLine("2. Listar usuarios");
@@ -239,7 +248,7 @@ class Program
             Console.WriteLine("5. Eliminar usuario");
             Console.WriteLine("0. Volver");
 
-            string op = Console.ReadLine();
+            string op = ReadOption();
 
             switch (op)
             {
@@ -252,7 +261,10 @@ class Program
                 default: Console.WriteLine("Opción inválida"); break;
             }
 
-            Console.ReadKey();
+            if (!back)
+            {
+                Pause();
+            }
         }
     }
 
@@ -294,14 +306,14 @@ class Program
 
         while (!back)
         {
-            Console.Clear();
+            SafeClear();
             Console.WriteLine("=== ACTUALIZAR USUARIO ===");
             Console.WriteLine("1. Editar nombre");
             Console.WriteLine("2. Editar contacto");
             Console.WriteLine("3. Activar / desactivar");
             Console.WriteLine("0. Volver");
 
-            string op = Console.ReadLine();
+            string op = ReadOption();
 
             switch (op)
             {
@@ -312,7 +324,10 @@ class Program
                 default: Console.WriteLine("Opción inválida"); break;
             }
 
-            Console.ReadKey();
+            if (!back)
+            {
+                Pause();
+            }
         }
     }
 
@@ -342,7 +357,7 @@ class Program
 
         while (!back)
         {
-            Console.Clear();
+            SafeClear();
             Console.WriteLine("=== GESTIÓN DE PRÉSTAMOS ===");
             Console.WriteLine("1. Crear préstamo");
             Console.WriteLine("2. Listar préstamos");
@@ -351,7 +366,7 @@ class Program
             Console.WriteLine("5. Eliminar préstamo");
             Console.WriteLine("0. Volver");
 
-            string op = Console.ReadLine();
+            string op = ReadOption();
 
             switch (op)
             {
@@ -364,7 +379,10 @@ class Program
                 default: Console.WriteLine("Opción inválida"); break;
             }
 
-            Console.ReadKey();
+            if (!back)
+            {
+                Pause();
+            }
         }
     }
 
@@ -387,14 +405,14 @@ class Program
 
         while (!back)
         {
-            Console.Clear();
+            SafeClear();
             Console.WriteLine("=== LISTAR PRÉSTAMOS ===");
             Console.WriteLine("1. Todos");
             Console.WriteLine("2. Activos");
             Console.WriteLine("3. Cerrados");
             Console.WriteLine("0. Volver");
 
-            string op = Console.ReadLine();
+            string op = ReadOption();
 
             switch (op)
             {
@@ -405,7 +423,10 @@ class Program
                 default: Console.WriteLine("Opción inválida"); break;
             }
 
-            Console.ReadKey();
+            if (!back)
+            {
+                Pause();
+            }
         }
     }
 
@@ -479,14 +500,14 @@ class Program
 
         while (!back)
         {
-            Console.Clear();
+            SafeClear();
             Console.WriteLine("=== BÚSQUEDAS Y REPORTES ===");
             Console.WriteLine("1. Buscar libro");
             Console.WriteLine("2. Buscar usuario");
             Console.WriteLine("3. Reportes");
             Console.WriteLine("0. Volver");
 
-            string op = Console.ReadLine();
+            string op = ReadOption();
 
             switch (op)
             {
@@ -497,7 +518,10 @@ class Program
                 default: Console.WriteLine("Opción inválida"); break;
             }
 
-            Console.ReadKey();
+            if (!back)
+            {
+                Pause();
+            }
         }
     }
 
@@ -519,13 +543,13 @@ class Program
 
     static void ShowPersistenceMenu()
     {
-        Console.Clear();
+        SafeClear();
         Console.WriteLine("=== GUARDAR / CARGAR DATOS ===");
         Console.WriteLine("1. Guardar datos");
         Console.WriteLine("2. Cargar datos");
         Console.WriteLine("3. Reiniciar datos");
 
-        string op = Console.ReadLine();
+        string op = ReadOption();
 
         switch (op)
         {
@@ -534,7 +558,7 @@ class Program
             case "3": ResetData(); break;
         }
 
-        Console.ReadKey();
+        Pause();
     }
 
     static void SaveData()
@@ -550,7 +574,7 @@ class Program
     static void ResetData()
     {
         Console.WriteLine("¿Seguro que desea reiniciar datos? (S/N)");
-        string op = Console.ReadLine();
+        string op = ReadOption();
 
         if (op.ToUpper() == "S")
         {
@@ -561,7 +585,7 @@ class Program
      static bool ConfirmExitAndSave()
     {
         Console.WriteLine("¿Guardar antes de salir? (S/N)");
-        string op = Console.ReadLine();
+        string op = ReadOption();
 
         if (op.ToUpper() == "S")
         {
@@ -569,6 +593,50 @@ class Program
         }
 
         return true;
+    }
+
+    static string ReadOption()
+    {
+        return Console.ReadLine() ?? string.Empty;
+    }
+
+    static void Pause()
+    {
+        if (Console.IsInputRedirected || Console.IsOutputRedirected)
+        {
+            return;
+        }
+
+        Console.WriteLine();
+        Console.WriteLine("Presione una tecla para continuar...");
+        Console.ReadKey(true);
+    }
+
+    static void SafeClear()
+    {
+        if (Console.IsOutputRedirected)
+        {
+            Console.WriteLine();
+            return;
+        }
+
+        try
+        {
+            Console.Clear();
+        }
+        catch (IOException)
+        {
+            WriteAnsiClear();
+        }
+        catch (PlatformNotSupportedException)
+        {
+            WriteAnsiClear();
+        }
+    }
+
+    static void WriteAnsiClear()
+    {
+        Console.Write("\u001b[2J\u001b[H");
     }
 
     static List<Libro> GetSampleBooks()
