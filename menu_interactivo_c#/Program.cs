@@ -1,5 +1,7 @@
 ﻿using System;
 
+using menu_ineractivo_c_.Models;
+
 class Program
 {
     static void Main()
@@ -94,7 +96,11 @@ class Program
 
     static void RegisterBook()
     {
-        Console.WriteLine("Simulación: registrar libro.");
+        Libro libro = GetSampleBooks()[0];
+
+        Console.WriteLine("=== OBJETO DE PRUEBA: REGISTRAR LIBRO ===");
+        Console.WriteLine(libro.DetalleCompleto());
+        Console.WriteLine($"ToString(): {libro}");
     }
 
     static void ListBooksMenu()
@@ -127,22 +133,47 @@ class Program
 
     static void ListBooksAll()
     {
-        Console.WriteLine("Simulación: listar todos los libros.");
+        Console.WriteLine("=== RESUMENES DE LIBROS ===");
+
+        foreach (Libro libro in GetSampleBooks())
+        {
+            Console.WriteLine(libro.ResumenCorto());
+        }
     }
 
     static void ListBooksAvailable()
     {
-        Console.WriteLine("Simulación: listar libros disponibles.");
+        Console.WriteLine("=== LIBROS DISPONIBLES ===");
+
+        foreach (Libro libro in GetSampleBooks().Where(libro => libro.Disponible))
+        {
+            Console.WriteLine(libro.ResumenCorto());
+            Console.WriteLine($"Validacion Disponible: {libro.Disponible}");
+            Console.WriteLine();
+        }
     }
 
     static void ListBooksBorrowed()
     {
-        Console.WriteLine("Simulación: listar libros prestados.");
+        Console.WriteLine("=== LIBROS PRESTADOS ===");
+
+        foreach (Libro libro in GetSampleBooks().Where(libro => !libro.Disponible))
+        {
+            Console.WriteLine(libro.ResumenCorto());
+            Console.WriteLine($"Validacion Disponible: {libro.Disponible}");
+            Console.WriteLine();
+        }
     }
 
     static void ViewBookDetail()
     {
-        Console.WriteLine("Simulación: ver detalle de libro por ID/ISBN.");
+        Console.WriteLine("=== DETALLES COMPLETOS DE LIBROS ===");
+
+        foreach (Libro libro in GetSampleBooks())
+        {
+            Console.WriteLine(libro.DetalleCompleto());
+            Console.WriteLine();
+        }
     }
 
     static void UpdateBookMenu()
@@ -227,17 +258,34 @@ class Program
 
     static void RegisterUser()
     {
-        Console.WriteLine("Simulación: registrar usuario.");
+        Usuario usuario = GetSampleUsers()[0];
+
+        Console.WriteLine("=== OBJETO DE PRUEBA: REGISTRAR USUARIO ===");
+        Console.WriteLine(usuario.DetalleCompleto());
+        Console.WriteLine($"ToString(): {usuario}");
     }
 
     static void ListUsers()
     {
-        Console.WriteLine("Simulación: listar usuarios.");
+        Console.WriteLine("=== RESUMENES DE USUARIOS ===");
+
+        foreach (Usuario usuario in GetSampleUsers())
+        {
+            Console.WriteLine(usuario.ResumenCorto());
+            Console.WriteLine($"Validacion Activo: {usuario.Activo}");
+            Console.WriteLine();
+        }
     }
 
     static void ViewUserDetail()
     {
-        Console.WriteLine("Simulación: ver detalle del usuario.");
+        Console.WriteLine("=== DETALLES COMPLETOS DE USUARIOS ===");
+
+        foreach (Usuario usuario in GetSampleUsers())
+        {
+            Console.WriteLine(usuario.DetalleCompleto());
+            Console.WriteLine();
+        }
     }
 
     static void UpdateUserMenu()
@@ -322,8 +370,15 @@ class Program
 
     static void CreateLoan()
     {
-        Console.WriteLine("Simulación: crear préstamo.");
-        Console.WriteLine("Validaciones: usuario activo, libro disponible, límite de préstamos.");
+        Prestamo prestamo = GetSampleLoan();
+
+        Console.WriteLine("=== OBJETO DE PRUEBA: CREAR PRESTAMO ===");
+        Console.WriteLine(prestamo.DetalleCompleto());
+        Console.WriteLine();
+        Console.WriteLine($"Validacion Estado: {prestamo.Estado}");
+        Console.WriteLine($"Validacion FechaDevolucion inicial: {(prestamo.FechaDevolucion is null ? "null" : prestamo.FechaDevolucion.Value.ToString("dd/MM/yyyy"))}");
+        Console.WriteLine($"Validacion usuario activo: {prestamo.Usuario.Activo}");
+        Console.WriteLine($"Validacion libro disponible: {prestamo.Libro.Disponible}");
     }
 
     static void ListLoansMenu()
@@ -356,27 +411,61 @@ class Program
 
     static void ListLoansAll()
     {
-        Console.WriteLine("Simulación: listar todos los préstamos.");
+        Prestamo prestamo = GetSampleLoan();
+
+        Console.WriteLine("=== RESUMEN DEL PRESTAMO ===");
+        Console.WriteLine(prestamo.ResumenCorto());
+        Console.WriteLine($"Validacion Estado: {prestamo.Estado}");
     }
 
     static void ListLoansActive()
     {
-        Console.WriteLine("Simulación: listar préstamos activos.");
+        Prestamo prestamo = GetSampleLoan();
+
+        Console.WriteLine("=== PRESTAMOS ACTIVOS ===");
+
+        if (prestamo.Estado == EstadoPrestamo.Activo)
+        {
+            Console.WriteLine(prestamo.ResumenCorto());
+        }
     }
 
     static void ListLoansClosed()
     {
-        Console.WriteLine("Simulación: listar préstamos cerrados.");
+        Prestamo prestamo = GetSampleLoan();
+
+        Console.WriteLine("=== PRESTAMOS CERRADOS ===");
+
+        if (prestamo.Estado != EstadoPrestamo.Activo)
+        {
+            Console.WriteLine(prestamo.ResumenCorto());
+        }
+        else
+        {
+            Console.WriteLine("No hay prestamos cerrados en el objeto de prueba.");
+        }
     }
 
     static void ViewLoanDetail()
     {
-        Console.WriteLine("Simulación: ver detalle del préstamo.");
+        Prestamo prestamo = GetSampleLoan();
+
+        Console.WriteLine("=== DETALLE COMPLETO DEL PRESTAMO ===");
+        Console.WriteLine(prestamo.DetalleCompleto());
+        Console.WriteLine();
+        Console.WriteLine($"Validacion Estado: {prestamo.Estado}");
+        Console.WriteLine($"Validacion EstaVencido(): {prestamo.EstaVencido()}");
+        Console.WriteLine($"Validacion DiasTranscurridos(): {prestamo.DiasTranscurridos()}");
     }
 
     static void RegisterReturn()
     {
-        Console.WriteLine("Simulación: registrar devolución del libro.");
+        Prestamo prestamo = GetSampleLoan();
+        prestamo.FechaDevolucion = DateTime.Now;
+        prestamo.Estado = EstadoPrestamo.Devuelto;
+
+        Console.WriteLine("=== REGISTRAR DEVOLUCION ===");
+        Console.WriteLine(prestamo.DetalleCompleto());
     }
 
     static void DeleteLoan()
@@ -480,5 +569,36 @@ class Program
         }
 
         return true;
+    }
+
+    static List<Libro> GetSampleBooks()
+    {
+        return new List<Libro>
+        {
+            new Libro(1, "Cien anos de soledad", "Gabriel Garcia Marquez", 1967, "Novela", "9780307474728"),
+            new Libro(2, "Clean Code", "Robert C. Martin", 2008, "Programacion", "9780132350884", false)
+        };
+    }
+
+    static List<Usuario> GetSampleUsers()
+    {
+        return new List<Usuario>
+        {
+            new Usuario(1, "Carlos Herrera", "carlos@example.com", "3001234567"),
+            new Usuario(2, "Ana Gomez", "ana@example.com", "3009876543", false)
+        };
+    }
+
+    static Prestamo GetSampleLoan()
+    {
+        Libro libroPrestado = GetSampleBooks()[1];
+        Usuario usuarioActivo = GetSampleUsers()[0];
+
+        return new Prestamo(
+            1,
+            libroPrestado,
+            usuarioActivo,
+            DateTime.Now.AddDays(-10),
+            DateTime.Now.AddDays(-2));
     }
 }
