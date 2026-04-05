@@ -27,4 +27,53 @@ public class LibroService
     {
         return libros.ToList();
     }
+
+    public Libro? BuscarPorIsbn(string isbn)
+    {
+        return libros.FirstOrDefault(libro =>
+            libro.Isbn.Equals(isbn, StringComparison.OrdinalIgnoreCase));
+    }
+
+    public List<Libro> BuscarPorTitulo(string titulo)
+    {
+        return libros
+            .Where(libro => libro.Titulo.Contains(titulo, StringComparison.OrdinalIgnoreCase))
+            .ToList();
+    }
+
+    public List<Libro> BuscarPorAutor(string autor)
+    {
+        return libros
+            .Where(libro => libro.Autor.Contains(autor, StringComparison.OrdinalIgnoreCase))
+            .ToList();
+    }
+
+    public List<Libro> OrdenarPorTitulo()
+    {
+        return libros
+            .OrderBy(libro => libro.Titulo)
+            .ToList();
+    }
+
+    public List<Libro> OrdenarPorAnioPublicacion()
+    {
+        return libros
+            .OrderBy(libro => libro.AnioPublicacion)
+            .ToList();
+    }
+
+    public int ObtenerTotalLibros()
+    {
+        return libros.Count;
+    }
+
+    public int ObtenerTotalDisponibles()
+    {
+        return libros.Count(libro => libro.Disponible);
+    }
+
+    public int ObtenerTotalPrestados()
+    {
+        return libros.Count(libro => !libro.Disponible);
+    }
 }
