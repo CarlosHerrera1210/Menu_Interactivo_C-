@@ -27,4 +27,39 @@ public class UsuarioService
     {
         return usuarios.ToList();
     }
+
+    public Usuario? BuscarPorDocumento(string documento)
+    {
+        return usuarios.FirstOrDefault(usuario =>
+            usuario.Documento.Equals(documento, StringComparison.OrdinalIgnoreCase));
+    }
+
+    public List<Usuario> BuscarPorNombre(string nombre)
+    {
+        return usuarios
+            .Where(usuario => usuario.NombreCompleto.Contains(nombre, StringComparison.OrdinalIgnoreCase))
+            .ToList();
+    }
+
+    public List<Usuario> OrdenarPorNombre()
+    {
+        return usuarios
+            .OrderBy(usuario => usuario.NombreCompleto)
+            .ToList();
+    }
+
+    public int ObtenerTotalUsuarios()
+    {
+        return usuarios.Count;
+    }
+
+    public int ObtenerTotalActivos()
+    {
+        return usuarios.Count(usuario => usuario.Activo);
+    }
+
+    public int ObtenerTotalInactivos()
+    {
+        return usuarios.Count(usuario => !usuario.Activo);
+    }
 }
