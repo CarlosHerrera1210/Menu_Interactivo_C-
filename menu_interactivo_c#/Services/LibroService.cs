@@ -28,6 +28,11 @@ public class LibroService
         return libros.ToList();
     }
 
+    public Libro? BuscarPorId(int id)
+    {
+        return libros.FirstOrDefault(libro => libro.Id == id);
+    }
+
     public Libro? BuscarPorIsbn(string isbn)
     {
         return libros.FirstOrDefault(libro =>

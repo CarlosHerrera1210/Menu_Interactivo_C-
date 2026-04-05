@@ -28,6 +28,11 @@ public class UsuarioService
         return usuarios.ToList();
     }
 
+    public Usuario? BuscarPorId(int id)
+    {
+        return usuarios.FirstOrDefault(usuario => usuario.Id == id);
+    }
+
     public Usuario? BuscarPorDocumento(string documento)
     {
         return usuarios.FirstOrDefault(usuario =>

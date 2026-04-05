@@ -106,11 +106,25 @@ class Program
 
     static void RegisterBook()
     {
-        Libro libro = libroService.ObtenerTodos()[0];
+        Console.WriteLine("=== REGISTRAR LIBRO ===");
 
-        Console.WriteLine("=== OBJETO DE PRUEBA: REGISTRAR LIBRO ===");
+        int id = GetNextBookId();
+        Console.Write("Titulo: ");
+        string titulo = ReadOption();
+        Console.Write("Autor: ");
+        string autor = ReadOption();
+        int anioPublicacion = ReadInt("Anio de publicacion: ");
+        Console.Write("Categoria: ");
+        string categoria = ReadOption();
+        Console.Write("ISBN: ");
+        string isbn = ReadOption();
+
+        Libro libro = new(id, titulo, autor, anioPublicacion, categoria, isbn);
+        libroService.AgregarLibro(libro);
+
+        Console.WriteLine();
+        Console.WriteLine("Libro registrado correctamente.");
         Console.WriteLine(libro.DetalleCompleto());
-        Console.WriteLine($"ToString(): {libro}");
         Console.WriteLine($"Total libros en List<T>: {libroService.ObtenerTotalLibros()}");
     }
 
@@ -182,12 +196,16 @@ class Program
     static void ViewBookDetail()
     {
         Console.WriteLine("=== DETALLES COMPLETOS DE LIBROS ===");
+        int id = ReadInt("Ingrese el ID del libro: ");
+        Libro? libro = libroService.BuscarPorId(id);
 
-        foreach (Libro libro in libroService.ObtenerTodos())
+        if (libro is null)
         {
-            Console.WriteLine(libro.DetalleCompleto());
-            Console.WriteLine();
+            Console.WriteLine("Libro no encontrado.");
+            return;
         }
+
+        Console.WriteLine(libro.DetalleCompleto());
     }
 
     static void UpdateBookMenu()
@@ -238,7 +256,24 @@ class Program
 
     static void DeleteBook()
     {
-        Console.WriteLine("Simulación: eliminar libro (validar que no esté prestado).");
+        Console.WriteLine("=== ELIMINAR LIBRO ===");
+        int id = ReadInt("Ingrese el ID del libro a eliminar: ");
+        Libro? libro = libroService.BuscarPorId(id);
+
+        if (libro is null)
+        {
+            Console.WriteLine("Libro no encontrado.");
+            return;
+        }
+
+        if (!libro.Disponible)
+        {
+            Console.WriteLine("No se puede eliminar un libro prestado.");
+            return;
+        }
+
+        bool eliminado = libroService.EliminarLibro(id);
+        Console.WriteLine(eliminado ? "Libro eliminado correctamente." : "No fue posible eliminar el libro.");
     }
 
     static void ShowUsersMenu()
@@ -278,11 +313,24 @@ class Program
 
     static void RegisterUser()
     {
-        Usuario usuario = usuarioService.ObtenerTodos()[0];
+        Console.WriteLine("=== REGISTRAR USUARIO ===");
 
-        Console.WriteLine("=== OBJETO DE PRUEBA: REGISTRAR USUARIO ===");
+        int id = GetNextUserId();
+        Console.Write("Documento: ");
+        string documento = ReadOption();
+        Console.Write("Nombre completo: ");
+        string nombreCompleto = ReadOption();
+        Console.Write("Correo electronico: ");
+        string correo = ReadOption();
+        Console.Write("Telefono: ");
+        string telefono = ReadOption();
+
+        Usuario usuario = new(id, documento, nombreCompleto, correo, telefono);
+        usuarioService.AgregarUsuario(usuario);
+
+        Console.WriteLine();
+        Console.WriteLine("Usuario registrado correctamente.");
         Console.WriteLine(usuario.DetalleCompleto());
-        Console.WriteLine($"ToString(): {usuario}");
         Console.WriteLine($"Total usuarios en List<T>: {usuarioService.ObtenerTotalUsuarios()}");
     }
 
@@ -301,12 +349,16 @@ class Program
     static void ViewUserDetail()
     {
         Console.WriteLine("=== DETALLES COMPLETOS DE USUARIOS ===");
+        int id = ReadInt("Ingrese el ID del usuario: ");
+        Usuario? usuario = usuarioService.BuscarPorId(id);
 
-        foreach (Usuario usuario in usuarioService.ObtenerTodos())
+        if (usuario is null)
         {
-            Console.WriteLine(usuario.DetalleCompleto());
-            Console.WriteLine();
+            Console.WriteLine("Usuario no encontrado.");
+            return;
         }
+
+        Console.WriteLine(usuario.DetalleCompleto());
     }
 
     static void UpdateUserMenu()
@@ -357,7 +409,28 @@ class Program
 
     static void DeleteUser()
     {
-        Console.WriteLine("Simulación: eliminar usuario (validar préstamos activos).");
+        Console.WriteLine("=== ELIMINAR USUARIO ===");
+        int id = ReadInt("Ingrese el ID del usuario a eliminar: ");
+        Usuario? usuario = usuarioService.BuscarPorId(id);
+
+        if (usuario is null)
+        {
+            Console.WriteLine("Usuario no encontrado.");
+            return;
+        }
+
+        bool tienePrestamosActivos = prestamoService
+            .ObtenerTodos()
+            .Any(prestamo => prestamo.Usuario.Id == id && prestamo.Estado == EstadoPrestamo.Activo);
+
+        if (tienePrestamosActivos)
+        {
+            Console.WriteLine("No se puede eliminar un usuario con prestamos activos.");
+            return;
+        }
+
+        bool eliminado = usuarioService.EliminarUsuario(id);
+        Console.WriteLine(eliminado ? "Usuario eliminado correctamente." : "No fue posible eliminar el usuario.");
     }
 
     static void ShowLoansMenu()
@@ -397,15 +470,65 @@ class Program
 
     static void CreateLoan()
     {
-        Prestamo prestamo = prestamoService.BuscarPorId(1)!;
+        Console.WriteLine("=== CREAR PRESTAMO ===");
+        Console.WriteLine("Libros disponibles:");
+        foreach (Libro libroDisponible in libroService.ObtenerTodos().Where(libro => libro.Disponible))
+        {
+            Console.WriteLine(libroDisponible.ResumenCorto());
+        }
 
-        Console.WriteLine("=== OBJETO DE PRUEBA: CREAR PRESTAMO ===");
-        Console.WriteLine(prestamo.DetalleCompleto());
         Console.WriteLine();
-        Console.WriteLine($"Validacion Estado: {prestamo.Estado}");
-        Console.WriteLine($"Validacion FechaDevolucion inicial: {(prestamo.FechaDevolucion is null ? "null" : prestamo.FechaDevolucion.Value.ToString("dd/MM/yyyy"))}");
-        Console.WriteLine($"Validacion usuario activo: {prestamo.Usuario.Activo}");
-        Console.WriteLine($"Validacion libro disponible: {prestamo.Libro.Disponible}");
+        Console.WriteLine("Usuarios activos:");
+        foreach (Usuario usuarioActivo in usuarioService.ObtenerTodos().Where(usuario => usuario.Activo))
+        {
+            Console.WriteLine(usuarioActivo.ResumenCorto());
+        }
+
+        Console.WriteLine();
+        int libroId = ReadInt("Ingrese el ID del libro: ");
+        int usuarioId = ReadInt("Ingrese el ID del usuario: ");
+        int diasPrestamo = ReadInt("Ingrese la cantidad de dias del prestamo: ");
+
+        Libro? libro = libroService.BuscarPorId(libroId);
+        Usuario? usuario = usuarioService.BuscarPorId(usuarioId);
+
+        if (libro is null)
+        {
+            Console.WriteLine("Libro no encontrado.");
+            return;
+        }
+
+        if (usuario is null)
+        {
+            Console.WriteLine("Usuario no encontrado.");
+            return;
+        }
+
+        if (!libro.Disponible)
+        {
+            Console.WriteLine("El libro no esta disponible.");
+            return;
+        }
+
+        if (!usuario.Activo)
+        {
+            Console.WriteLine("El usuario no esta activo.");
+            return;
+        }
+
+        Prestamo prestamo = new(
+            GetNextLoanId(),
+            libro,
+            usuario,
+            DateTime.Now,
+            DateTime.Now.AddDays(diasPrestamo));
+
+        libro.Disponible = false;
+        prestamoService.AgregarPrestamo(prestamo);
+
+        Console.WriteLine();
+        Console.WriteLine("Prestamo creado correctamente.");
+        Console.WriteLine(prestamo.DetalleCompleto());
     }
 
     static void ListLoansMenu()
@@ -485,7 +608,14 @@ class Program
 
     static void ViewLoanDetail()
     {
-        Prestamo prestamo = prestamoService.BuscarPorId(2)!;
+        int id = ReadInt("Ingrese el ID del prestamo: ");
+        Prestamo? prestamo = prestamoService.BuscarPorId(id);
+
+        if (prestamo is null)
+        {
+            Console.WriteLine("Prestamo no encontrado.");
+            return;
+        }
 
         Console.WriteLine("=== DETALLE COMPLETO DEL PRESTAMO ===");
         Console.WriteLine(prestamo.DetalleCompleto());
@@ -497,25 +627,47 @@ class Program
 
     static void RegisterReturn()
     {
-        Prestamo? prestamo = prestamoService.BuscarPorEstado(EstadoPrestamo.Activo).FirstOrDefault();
-
-        if (prestamo is null)
+        Console.WriteLine("=== REGISTRAR DEVOLUCION ===");
+        Console.WriteLine("Prestamos activos:");
+        foreach (Prestamo prestamoActivo in prestamoService.BuscarPorEstado(EstadoPrestamo.Activo))
         {
-            Console.WriteLine("No hay prestamos activos para registrar devolucion.");
+            Console.WriteLine(prestamoActivo.ResumenCorto());
+        }
+
+        int id = ReadInt("Ingrese el ID del prestamo a devolver: ");
+        Prestamo? prestamo = prestamoService.BuscarPorId(id);
+
+        if (prestamo is null || prestamo.Estado != EstadoPrestamo.Activo)
+        {
+            Console.WriteLine("Prestamo activo no encontrado.");
             return;
         }
 
         prestamo.FechaDevolucion = DateTime.Now;
         prestamo.Estado = EstadoPrestamo.Devuelto;
         prestamo.Libro.Disponible = true;
-
-        Console.WriteLine("=== REGISTRAR DEVOLUCION ===");
         Console.WriteLine(prestamo.DetalleCompleto());
     }
 
     static void DeleteLoan()
     {
-        Console.WriteLine("Simulación: eliminar préstamo.");
+        Console.WriteLine("=== ELIMINAR PRESTAMO ===");
+        int id = ReadInt("Ingrese el ID del prestamo a eliminar: ");
+        Prestamo? prestamo = prestamoService.BuscarPorId(id);
+
+        if (prestamo is null)
+        {
+            Console.WriteLine("Prestamo no encontrado.");
+            return;
+        }
+
+        if (prestamo.Estado == EstadoPrestamo.Activo)
+        {
+            prestamo.Libro.Disponible = true;
+        }
+
+        bool eliminado = prestamoService.EliminarPrestamo(id);
+        Console.WriteLine(eliminado ? "Prestamo eliminado correctamente." : "No fue posible eliminar el prestamo.");
     }
 
     static void ShowSearchReportsMenu()
@@ -709,6 +861,40 @@ class Program
     static string ReadOption()
     {
         return Console.ReadLine() ?? string.Empty;
+    }
+
+    static int ReadInt(string message)
+    {
+        while (true)
+        {
+            Console.Write(message);
+            string input = ReadOption();
+
+            if (int.TryParse(input, out int value))
+            {
+                return value;
+            }
+
+            Console.WriteLine("Ingrese un numero valido.");
+        }
+    }
+
+    static int GetNextBookId()
+    {
+        List<Libro> libros = libroService.ObtenerTodos();
+        return libros.Count == 0 ? 1 : libros.Max(libro => libro.Id) + 1;
+    }
+
+    static int GetNextUserId()
+    {
+        List<Usuario> usuarios = usuarioService.ObtenerTodos();
+        return usuarios.Count == 0 ? 1 : usuarios.Max(usuario => usuario.Id) + 1;
+    }
+
+    static int GetNextLoanId()
+    {
+        List<Prestamo> prestamos = prestamoService.ObtenerTodos();
+        return prestamos.Count == 0 ? 1 : prestamos.Max(prestamo => prestamo.Id) + 1;
     }
 
     static void Pause()
