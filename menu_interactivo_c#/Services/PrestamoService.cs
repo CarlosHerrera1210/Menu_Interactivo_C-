@@ -27,4 +27,54 @@ public class PrestamoService
     {
         return prestamos.ToList();
     }
+
+    public Prestamo? BuscarPorId(int id)
+    {
+        return prestamos.FirstOrDefault(prestamo => prestamo.Id == id);
+    }
+
+    public List<Prestamo> BuscarPorEstado(EstadoPrestamo estado)
+    {
+        return prestamos
+            .Where(prestamo => prestamo.Estado == estado)
+            .ToList();
+    }
+
+    public List<Prestamo> OrdenarPorFechaLimite()
+    {
+        return prestamos
+            .OrderBy(prestamo => prestamo.FechaLimiteDevolucion)
+            .ToList();
+    }
+
+    public int ObtenerTotalPrestamos()
+    {
+        return prestamos.Count;
+    }
+
+    public int ObtenerTotalActivos()
+    {
+        return prestamos.Count(prestamo => prestamo.Estado == EstadoPrestamo.Activo);
+    }
+
+    public int ObtenerTotalDevueltos()
+    {
+        return prestamos.Count(prestamo => prestamo.Estado == EstadoPrestamo.Devuelto);
+    }
+
+    public int ObtenerTotalVencidos()
+    {
+        return prestamos.Count(prestamo =>
+            prestamo.Estado == EstadoPrestamo.Vencido || prestamo.EstaVencido());
+    }
+
+    public double ObtenerPromedioDiasPrestamo()
+    {
+        if (prestamos.Count == 0)
+        {
+            return 0;
+        }
+
+        return prestamos.Average(prestamo => prestamo.DiasTranscurridos());
+    }
 }
