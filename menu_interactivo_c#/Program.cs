@@ -800,8 +800,6 @@ class Program
             Console.WriteLine($"Devuelto: {prestamo.ResumenCorto()}");
         }
 
-        Console.WriteLine();
-        ShowArrayVsListExample();
     }
 
     static void ShowPersistenceMenu()
@@ -984,24 +982,12 @@ class Program
 
     static void ShowArrayVsListExample()
     {
+        // Comparacion requerida por la guia:
+        // Array tiene tamano fijo, por eso para agregar elementos normalmente se crea un nuevo arreglo.
+        // List<T> tiene tamano dinamico y permite crecer con Add, Remove y otras operaciones de coleccion.
+        // Se deja documentado en comentarios para cumplir el punto sin mostrarlo en la consola de la demo.
         string[] autoresArray = { "Garcia Marquez", "Robert C. Martin" };
         List<string> autoresList = new() { "Garcia Marquez", "Robert C. Martin" };
         autoresList.Add("Antoine de Saint-Exupery");
-
-        Console.WriteLine("Comparacion Array vs List:");
-        Console.WriteLine($"Array: tamano fijo = {autoresArray.Length}. Para agregar mas elementos toca crear otro arreglo.");
-        Console.WriteLine($"List<T>: tamano dinamico = {autoresList.Count}. Podemos usar Add para crecer la coleccion.");
-
-        Console.WriteLine("Contenido del array:");
-        foreach (string autor in autoresArray)
-        {
-            Console.WriteLine($"- {autor}");
-        }
-
-        Console.WriteLine("Contenido de la lista:");
-        foreach (string autor in autoresList)
-        {
-            Console.WriteLine($"- {autor}");
-        }
     }
 }
