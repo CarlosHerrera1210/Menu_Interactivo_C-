@@ -1,5 +1,6 @@
 ﻿using System;
 
+using System.Text.Json;
 using menu_ineractivo_c_.Models;
 using menu_ineractivo_c_.Services;
 
@@ -8,9 +9,11 @@ class Program
     private static readonly LibroService libroService = new();
     private static readonly UsuarioService usuarioService = new();
     private static readonly PrestamoService prestamoService = new();
+    private static readonly string dataFilePath = Path.Combine(AppContext.BaseDirectory, "library-data.json");
 
     static void Main()
     {
+        LoadData(false);
         ShowMainMenu();
     }
 
@@ -935,7 +938,7 @@ class Program
         switch (op)
         {
             case "1": SaveData(); break;
-            case "2": LoadData(); break;
+            case "2": LoadData(true); break;
             case "3": ResetData(); break;
         }
 
@@ -944,12 +947,117 @@ class Program
 
     static void SaveData()
     {
-        Console.WriteLine("Simulación: datos guardados.");
+        LibraryDataSnapshot snapshot = new(
+            libroService.ObtenerTodos()
+                .Select(libro => new LibroData(
+                    libro.Id,
+                    libro.Titulo,
+                    libro.Autor,
+                    libro.AnioPublicacion,
+                    libro.Categoria,
+                    libro.Isbn,
+                    libro.Disponible))
+                .ToList(),
+            usuarioService.ObtenerTodos()
+                .Select(usuario => new UsuarioData(
+                    usuario.Id,
+                    usuario.Documento,
+                    usuario.NombreCompleto,
+                    usuario.CorreoElectronico,
+                    usuario.Telefono,
+                    usuario.Activo))
+                .ToList(),
+            prestamoService.ObtenerTodos()
+                .Select(prestamo => new PrestamoData(
+                    prestamo.Id,
+                    prestamo.Libro.Id,
+                    prestamo.Usuario.Id,
+                    prestamo.FechaPrestamo,
+                    prestamo.FechaLimiteDevolucion,
+                    prestamo.FechaDevolucion,
+                    prestamo.Estado))
+                .ToList());
+
+        JsonSerializerOptions options = new() { WriteIndented = true };
+        string json = JsonSerializer.Serialize(snapshot, options);
+        File.WriteAllText(dataFilePath, json);
+
+        Console.WriteLine("Datos guardados correctamente.");
     }
 
-    static void LoadData()
+    static void LoadData(bool showMessage)
     {
-        Console.WriteLine("Simulación: datos cargados.");
+        if (!File.Exists(dataFilePath))
+        {
+            if (showMessage)
+            {
+                Console.WriteLine("No existe un archivo de datos guardados.");
+            }
+
+            return;
+        }
+
+        string json = File.ReadAllText(dataFilePath);
+        LibraryDataSnapshot? snapshot = JsonSerializer.Deserialize<LibraryDataSnapshot>(json);
+
+        if (snapshot is null)
+        {
+            if (showMessage)
+            {
+                Console.WriteLine("No fue posible cargar los datos.");
+            }
+
+            return;
+        }
+
+        libroService.Limpiar();
+        usuarioService.Limpiar();
+        prestamoService.Limpiar();
+
+        List<Libro> libros = snapshot.Libros
+            .Select(data => new Libro(
+                data.Id,
+                data.Titulo,
+                data.Autor,
+                data.AnioPublicacion,
+                data.Categoria,
+                data.Isbn,
+                data.Disponible))
+            .ToList();
+
+        List<Usuario> usuarios = snapshot.Usuarios
+            .Select(data => new Usuario(
+                data.Id,
+                data.Documento,
+                data.NombreCompleto,
+                data.CorreoElectronico,
+                data.Telefono,
+                data.Activo))
+            .ToList();
+
+        Dictionary<int, Libro> librosPorId = libros.ToDictionary(libro => libro.Id);
+        Dictionary<int, Usuario> usuariosPorId = usuarios.ToDictionary(usuario => usuario.Id);
+
+        List<Prestamo> prestamos = snapshot.Prestamos
+            .Where(data => librosPorId.ContainsKey(data.LibroId) && usuariosPorId.ContainsKey(data.UsuarioId))
+            .Select(data => new Prestamo(
+                data.Id,
+                librosPorId[data.LibroId],
+                usuariosPorId[data.UsuarioId],
+                data.FechaPrestamo,
+                data.FechaLimiteDevolucion,
+                data.FechaDevolucion,
+                data.Estado))
+            .ToList();
+
+        libroService.ReemplazarTodos(libros);
+        usuarioService.ReemplazarTodos(usuarios);
+        prestamoService.ReemplazarTodos(prestamos);
+
+        if (showMessage)
+        {
+            Console.WriteLine("Datos cargados correctamente.");
+        }
     }
 
     static void ResetData()
@@ -959,7 +1067,16 @@ class Program
 
         if (op.ToUpper() == "S")
         {
-            Console.WriteLine("Simulación: datos reiniciados.");
+            libroService.Limpiar();
+            usuarioService.Limpiar();
+            prestamoService.Limpiar();
+
+            if (File.Exists(dataFilePath))
+            {
+                File.Delete(dataFilePath);
+            }
+
+            Console.WriteLine("Datos reiniciados correctamente.");
         }
     }
 
@@ -1037,6 +1154,7 @@ class Program
 
         try
         {
+            WriteAnsiClear();
             Console.Clear();
         }
         catch (IOException)
@@ -1051,7 +1169,7 @@ class Program
 
     static void WriteAnsiClear()
     {
-        Console.Write("\u001b[2J\u001b[H");
+        Console.Write("\u001b[3J\u001b[2J\u001b[H");
     }
 
     static Libro? GetBookByIdFromInput()
@@ -1120,3 +1238,34 @@ class Program
         }
     }
 }
+
+record LibroData(
+    int Id,
+    string Titulo,
+    string Autor,
+    int AnioPublicacion,
+    string Categoria,
+    string Isbn,
+    bool Disponible);
+
+record UsuarioData(
+    int Id,
+    string Documento,
+    string NombreCompleto,
+    string CorreoElectronico,
+    string Telefono,
+    bool Activo);
+
+record PrestamoData(
+    int Id,
+    int LibroId,
+    int UsuarioId,
+    DateTime FechaPrestamo,
+    DateTime FechaLimiteDevolucion,
+    DateTime? FechaDevolucion,
+    EstadoPrestamo Estado);
+
+record LibraryDataSnapshot(
+    List<LibroData> Libros,
+    List<UsuarioData> Usuarios,
+    List<PrestamoData> Prestamos);
