@@ -28,6 +28,17 @@ public class LibroService
         return libros.ToList();
     }
 
+    public void ReemplazarTodos(IEnumerable<Libro> nuevosLibros)
+    {
+        libros.Clear();
+        libros.AddRange(nuevosLibros);
+    }
+
+    public void Limpiar()
+    {
+        libros.Clear();
+    }
+
     public Libro? BuscarPorId(int id)
     {
         return libros.FirstOrDefault(libro => libro.Id == id);

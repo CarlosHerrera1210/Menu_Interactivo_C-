@@ -28,6 +28,17 @@ public class UsuarioService
         return usuarios.ToList();
     }
 
+    public void ReemplazarTodos(IEnumerable<Usuario> nuevosUsuarios)
+    {
+        usuarios.Clear();
+        usuarios.AddRange(nuevosUsuarios);
+    }
+
+    public void Limpiar()
+    {
+        usuarios.Clear();
+    }
+
     public Usuario? BuscarPorId(int id)
     {
         return usuarios.FirstOrDefault(usuario => usuario.Id == id);
