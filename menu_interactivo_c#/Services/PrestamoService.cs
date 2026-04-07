@@ -28,6 +28,17 @@ public class PrestamoService
         return prestamos.ToList();
     }
 
+    public void ReemplazarTodos(IEnumerable<Prestamo> nuevosPrestamos)
+    {
+        prestamos.Clear();
+        prestamos.AddRange(nuevosPrestamos);
+    }
+
+    public void Limpiar()
+    {
+        prestamos.Clear();
+    }
+
     public Prestamo? BuscarPorId(int id)
     {
         return prestamos.FirstOrDefault(prestamo => prestamo.Id == id);
